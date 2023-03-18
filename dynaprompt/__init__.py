@@ -1,3 +1,5 @@
-from .say_hello import say_hello
+from ._DynaPrompt import DynaPrompt
 
-__all__ = ["say_hello"]
+__all__ = [
+    "DynaPrompt"
+]

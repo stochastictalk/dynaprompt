@@ -14,13 +14,13 @@ Notice:
 
 `dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm by providing a message scheduler. This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
 ```
-dp <RECIPIENT> <TIME PROMPT>
+dps <RECIPIENT> <TIME PROMPT>
 
-<MESSAGE>
+<PROMPT>
 ```
 - `<RECIPIENT>`: should be either `user` (alias `u`) or `chatbot` (alias `c`)
 - `<TIME PROMPT>`: a message indicating when the message should be sent, e.g. `tomorrow evening`, `every day at 8am`, `15th March at 2pm`
-- `<MESSAGE>`: the message to be sent (can be multiline, no restrictions on content) e.g. `teach me about an unusual species of monkey`
+- `<PROMPT>`: the message to be sent (can be multiline, no restrictions on content) e.g. `teach me about an unusual species of monkey`
 
 Example use-cases:
 * chatbot schedules multiple messages for the immediate future, allowing it to send more than one message at a time
@@ -35,8 +35,13 @@ pip install git+https://github.com/stochastictalk/dynaprompt
 ```
 
 ```
-@TODO quickstart example
+dp = DynaPrompt(file=".dp")
+message = "..."
+dp(message) # Schedules/deschedules/does nothing (depends on message content).
+dp.schedule # Inspect message schedule.
 ```
+
+`dps` ("DynaPrompt schedule") schedules a message, `dpd` ("DynaPrompt deschedule") cancels a scheduled message.
 
 
 ## Developer Quickstart
