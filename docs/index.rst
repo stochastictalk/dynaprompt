@@ -1,8 +1,8 @@
 =============================
-boilerplate
+dynabot
 =============================
 
-**boilerplate** is a minimal Python package with tools for documentation, linting, formatting and testing.
+**dynabot** is a minimal Python package with tools for documentation, linting, formatting and testing.
 
 
 Contents
@@ -18,7 +18,7 @@ Contents
 
 Modules
 =======
-* :doc:`boilerplate </api/boilerplate>` - top-level package.
+* :doc:`dynabot </api/dynabot>` - top-level package.
 
 
 

@@ -1,7 +1,7 @@
-# Replace every appearance of 'boilerplate' with package name.
+# Replace every appearance of 'dynabot' with package name.
 
 [tool.poetry]
-name = "boilerplate"
+name = "dynabot"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
