@@ -1,8 +1,8 @@
 =============================
-dynabot
+dynaprompt
 =============================
 
-**dynabot** is a minimal Python package with tools for documentation, linting, formatting and testing.
+**dynaprompt** is a minimal Python package with tools for documentation, linting, formatting and testing.
 
 
 Contents
@@ -18,7 +18,7 @@ Contents
 
 Modules
 =======
-* :doc:`dynabot </api/dynabot>` - top-level package.
+* :doc:`dynaprompt </api/dynaprompt>` - top-level package.
 
 
 
