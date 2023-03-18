@@ -16,19 +16,21 @@ Key things to notice:
 ```
 User --- DynaPrompt --- Chatbot
 ```
-This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages. A scheduled message has three attributes:
-* Recipient
-* Timestamp
-* Message
+This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
+```
+dp <RECIPIENT> <TIME PROMPT>
+
+<MESSAGE>
+```
+Schema for these arguments:
+- `<RECIPIENT>`: should be either `user` (alias `u`) or `chatbot` (alias `c`)
+- `<TIME PROMPT>`: a message indicating when the message should be sent, e.g. `tomorrow evening`, `every day at 8am`, `15th March at 2pm`
+- `<MESSAGE>`: the message to be sent (can be multiline, no restrictions on content)
 
 Example use-cases:
 * chatbot schedules multiple messages for the immediate future, allowing it to send more than one message at a time
 * chatbot schedules initiating or continuing a conversation with a user at a later date and time
 * user schedules impromptu or recurring conversations with the chatbot
-
-## Features
-
-@TODO
 
 ## User Quickstart
 
