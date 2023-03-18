@@ -7,7 +7,7 @@ Chatbot:    <response>
 User:       <prompt>
 Chatbot:    <response>
 ```
-Key things to notice:
+Notice:
 1. The interaction is initiated by the user.
 2. Both participants send only a single message at a time.
 3. The chatbot only ever responds immediately after being addressed by the user. 
