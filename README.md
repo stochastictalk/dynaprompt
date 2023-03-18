@@ -12,20 +12,15 @@ Key things to notice:
 2. Both participants send only a single message at a time.
 3. The chatbot only ever responds immediately after being addressed by the user. 
 
-`dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm by providing a message scheduler that sits between the User and Chatbot, like
-```
-User --- DynaPrompt --- Chatbot
-```
-This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
+`dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm by providing a message scheduler. This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
 ```
 dp <RECIPIENT> <TIME PROMPT>
 
 <MESSAGE>
 ```
-Schema for these arguments:
 - `<RECIPIENT>`: should be either `user` (alias `u`) or `chatbot` (alias `c`)
 - `<TIME PROMPT>`: a message indicating when the message should be sent, e.g. `tomorrow evening`, `every day at 8am`, `15th March at 2pm`
-- `<MESSAGE>`: the message to be sent (can be multiline, no restrictions on content)
+- `<MESSAGE>`: the message to be sent (can be multiline, no restrictions on content) e.g. `teach me about an unusual species of monkey`
 
 Example use-cases:
 * chatbot schedules multiple messages for the immediate future, allowing it to send more than one message at a time
