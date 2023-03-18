@@ -12,11 +12,11 @@ Key things to notice:
 2. Both participants send only a single message at a time.
 3. The chatbot only ever responds immediately after being addressed by the user. 
 
-`dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm via a message scheduler that sits between the User and Chatbot, like
+`dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm by providing a message scheduler that sits between the User and Chatbot, like
 ```
 User --- DynaPrompt --- Chatbot
 ```
-As a message scheduler, its functionality is very simple: the user and chatbot can use it to schedule messages. A scheduled message has three attributes:
+This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages. A scheduled message has three attributes:
 * Recipient
 * Timestamp
 * Message
