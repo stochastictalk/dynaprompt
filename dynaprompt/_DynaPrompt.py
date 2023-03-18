@@ -3,17 +3,8 @@ import logging
 import re
 
 from .utils import extract_match
-
-class DynaPromptCommandMode(Enum):
-    SCHEDULE = 0
-    DESCHEDULE = 1
-
-class DynaPromptCommand:
-    recipient: str
-    time_prompt: str
-    prompt: str
-    mode: DynaPromptCommandMode
-    incomplete: bool
+from ._DynaPromptCommand import DynaPromptCommand
+from ._DynaPromptCommandMode import DynaPromptCommandMode
 
 class DynaPrompt:
 
@@ -24,8 +15,8 @@ class DynaPrompt:
             "dps_command": re.compile(r"^dps"),
             "dpd_command": re.compile(r"^dpd"),
             "recipient": re.compile(r"\S+\s+(\S+)"),
-            "time_prompt": re.compile(r"(?<=\b\w+\s+\w+\s)([^\n]+)"),
-            "prompt": re.compile(r"\n(.*)")
+            "time_prompt": re.compile(r"\b\w+\s+\w+\s+([^\n]+)"),
+            "prompt": re.compile(r"[^\n]+\n(.*)")
         }
         self.schedule = dict()
 
@@ -64,7 +55,7 @@ class DynaPrompt:
                 prompt=prompt,
                 incomplete=((recipient is None) or (time_prompt is None) or (prompt is None))
             )
-        elif mode == DynaPromptCommandMode.SCHEDULE:
+        elif mode == DynaPromptCommandMode.DESCHEDULE:
             return DynaPromptCommand(
                 mode=mode,
                 recipient=recipient,
@@ -72,6 +63,8 @@ class DynaPrompt:
                 prompt=prompt,
                 incomplete=((recipient is None) or (time_prompt is None) or (prompt is None))
             )
+        else:
+            raise ValueError("'mode' should be a DynaPromptCommandMode")
 
     
     def _ignore(self, message: str):
