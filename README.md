@@ -88,3 +88,8 @@ python -m http.server 3527 -d ../build/sphinx/html
 ``` 
 Open a web browser on the host and go to `localhost:3527`. You should see the docs.
 
+## Feature priority stack
+
+1. Get to minimum functionality (scheduling and emitting prompts).
+2. Incorporate into quickstart demo.
+2. 
