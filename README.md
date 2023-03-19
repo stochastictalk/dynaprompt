@@ -40,10 +40,10 @@ OPENAI_API_KEY="<your api key>"
 ```
 Then launch a Python interpreter and run
 ```
-from dynaprompt.examples import openai_chat_completion
-openai_chat_completion()
+from dynaprompt.examples import openai_chat
+openai_chat()
 ```
-This creates a chat session facilitated by OpenAI's in the interpreter. Say hellow to PLEX!
+This creates a chat session facilitated by OpenAI's in the interpreter. Say hello to PLEX!
 
 
 ## Developer Quickstart

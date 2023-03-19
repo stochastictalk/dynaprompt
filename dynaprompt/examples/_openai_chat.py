@@ -23,7 +23,6 @@ def time_since_epoch_ms():
     return int(time() * 1000)
 
 
-
 def receive_user_input(message_log_proxy: ValueProxy):
     id_of_last_message_in_log_at_last_input_request = None
     while True:
@@ -96,7 +95,7 @@ def receive_chatbot_input(message_log_proxy: ValueProxy):
         pass
 
 
-def openai_chat_completion():
+def openai_chat():
     init() # Initialize colorama.
     try:
         manager = Manager() # Used to share state between processes.

@@ -1,5 +1,5 @@
-from ._openai_chat_completion import openai_chat_completion
+from ._openai_chat import openai_chat
 
 __all__ = [
-    "openai_chat_completion"
+    "openai_chat"
 ]
