@@ -8,15 +8,15 @@ from sys import maxsize
 from time import time, sleep
 from typing import List, Dict
 
+import click
 from colorama import init, Fore, Back, Style
 from dotenv import dotenv_values
 import openai
 from dynaprompt import DynaPrompt
 
-# Save your API kay to a .env file with the the entry OPENAI_API_KEY="<your API key>".
+
 config = dotenv_values(".env")
 openai.api_key = config["OPENAI_API_KEY"]
-
 
 def generate_hash(optional_string: str = ""):
     return hash(optional_string + str(time_since_epoch_ms()) + str(randint(0, maxsize)))
@@ -97,17 +97,24 @@ def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
                 message = f"OpenAI API returned an API Error: {e}"
                 role = "error"
             except openai.error.APIConnectionError as e:
-                message = f"Failed to connect to OpenAI API: {e}"
+                message = f"Failed to connect to OpenAI API."
                 role = "error"
             except openai.error.RateLimitError as e:
-                message = f"OpenAI API request exceeded rate limit: {e}"
+                message = f"OpenAI API request exceeded rate limit."
+                role = "error"
+            except openai.error.AuthenticationError as e:
+                message = f"No OpenAI API key provided. Please provide an OpenAI API key via the command arguments."
                 role = "error"
             message_log_proxy.value = message_log_proxy.value + [
                     {"role": role, "content": message, "id": id_of_last_message_chatbot_sent}
             ]
 
 
-def openai_chat():
+@click.command()
+@click.option('--system_prompt', default="You are a helpful, wise-cracking assistant named PLEX.", help="The system prompt.")
+def chat(
+    system_prompt: str = "You are a helpful, wise-cracking assistant named PLEX."
+    ):
     init() # Initialize colorama.
     try:
         manager = Manager() # Used to share state between processes.
@@ -115,7 +122,7 @@ def openai_chat():
             "message_log_proxy", 
             [{
                 "role": "system",
-                "content": "You are a helpful, wise-cracking assistant named PLEX.",
+                "content": system_prompt,
                 "id": generate_hash("system")
             }]
         )
@@ -131,5 +138,9 @@ def openai_chat():
     except KeyboardInterrupt:
         stop_event.set()
         p.join()
+
+
+if __name__ == "__main__":
+    chat()
 
 #dp = DynaPrompt()
