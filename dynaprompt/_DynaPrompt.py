@@ -22,6 +22,15 @@ class DynaPrompt:
 
     def __call__(self, message: str):
         """Processes a message.
+
+        Parameters
+        ----------
+        message : str
+            Message to be processed.
+
+        Returns
+        -------
+            None
         """
         # Route raw message to appropriate command.
         if self._regexps["dps_command"].match(message):
@@ -42,7 +51,7 @@ class DynaPrompt:
     def _deschedule(self, command: DynaPromptCommand):
         self.schedule.append(command)
 
-    def _extract_command(self, mode: DynaPromptCommandMode, message: str):
+    def _extract_command(self, mode: DynaPromptCommandMode, message: str) -> DynaPromptCommand:
         """Maps raw command message to structured format."""
         recipient = extract_match(self._regexps["recipient"], message)
         time_prompt = extract_match(self._regexps["time_prompt"], message)
