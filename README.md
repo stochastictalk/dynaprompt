@@ -45,7 +45,8 @@ openai_chat()
 ```
 This creates a chat session facilitated by OpenAI's in the interpreter. Say hello to PLEX!
 
-![](assets/example.mov)
+![]()
+<video src="https://github.com/stochastictalk/dynaprompt/blob/main/assets/example.mov" width=180/>
 
 
 
