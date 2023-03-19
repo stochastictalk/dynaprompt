@@ -45,11 +45,11 @@ def receive_user_input(message_log_proxy: ValueProxy):
 
 def format_role_string(role: str):
     if role == "user":
-        return Back.GREEN + f"{role}" + Style.RESET_ALL + " "
+        return Back.GREEN + f"{role}" + Style.RESET_ALL + "\n"
     elif role == "system":
-        return Back.WHITE + f"{role}" + Style.RESET_ALL + " "
+        return Back.WHITE + f"{role}" + Style.RESET_ALL + "\n"
     elif role == "assistant":
-        return Back.MAGENTA + f"{role}" + Style.RESET_ALL + " "
+        return Back.MAGENTA + f"{role}" + Style.RESET_ALL + "\n"
     else:
         return role
 
@@ -96,7 +96,7 @@ def receive_chatbot_input(message_log_proxy: ValueProxy):
         pass
 
 
-if __name__ == "__main__":
+def openai_chat_completion():
     init() # Initialize colorama.
     try:
         manager = Manager() # Used to share state between processes.
