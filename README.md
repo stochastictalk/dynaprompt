@@ -46,6 +46,10 @@ openai_chat()
 This creates a chat session facilitated by OpenAI's in the interpreter. Say hello to PLEX!
 
 
+https://user-images.githubusercontent.com/56552295/226182010-07d10869-716c-434a-b127-d77dc8548a46.mov
+
+
+
 
 ## Developer Quickstart
 
