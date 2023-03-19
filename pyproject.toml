@@ -31,9 +31,6 @@ dev = [
     "furo"
 ]
 
-[tool.poetry.scripts]
-dpchat = "dynaprompt.examples:chat"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -76,7 +76,13 @@ def map_message_log_to_openai_messages(message_log: List[Dict]):
     return [{i:d[i] for i in d if i != "id"} for d in message_log if d["role"] != "error"]
 
 
-def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
+def run_chatbot(
+        message_log_proxy: ValueProxy,
+        stop_event: Event,
+        temperature: float = 0.3,
+        presence_penalty: float = 0.,
+        frequency_penalty: float = 0.
+    ):
     # Needs to listen for new inputs.
     # Has view of current state of message_log_proxy. State changes.
     # Make new request if latest message was not the one just sent.
@@ -86,11 +92,18 @@ def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
         id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
         if id_of_last_message_in_log != id_of_last_message_chatbot_sent:
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=map_message_log_to_openai_messages(message_log_proxy.value)
-                ) 
-                message = response["choices"][0]["message"]["content"].lstrip()
+                stop = False
+                message = ""
+                while not stop:
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=map_message_log_to_openai_messages(message_log_proxy.value),
+                        temperature=temperature,
+                        presence_penalty=presence_penalty,
+                        frequency_penalty=frequency_penalty
+                    ) 
+                    message += response["choices"][0]["message"]["content"].lstrip()
+                    stop = ("stop" == response["choices"][0]["finish_reason"])
                 id_of_last_message_chatbot_sent = generate_hash("assistant")
                 role = "assistant"
             except openai.error.APIError as e:
@@ -110,10 +123,11 @@ def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
             ]
 
 
-@click.command()
-@click.option('--system_prompt', default="You are a helpful, wise-cracking assistant named PLEX.", help="The system prompt.")
 def chat(
-    system_prompt: str = "You are a helpful, wise-cracking assistant named PLEX."
+    system_prompt: str = "You are a helpful, wise-cracking assistant named PLEX.",
+    temperature: float = 0.3,
+    presence_penalty: float = 2,
+    frequency_penalty: float = 2
     ):
     init() # Initialize colorama.
     try:
@@ -127,7 +141,16 @@ def chat(
             }]
         )
         stop_event = manager.Event()
-        chatbot_process = Process(target=receive_chatbot_input, args=(message_log_proxy, stop_event))
+        chatbot_process = Process(
+            target=run_chatbot,
+            args=(
+                message_log_proxy, 
+                stop_event,
+                temperature,
+                presence_penalty,
+                frequency_penalty
+            )
+        )
         render_process = Process(target=render_log, args=(message_log_proxy, stop_event))
         processes = [chatbot_process, render_process]
 
@@ -138,9 +161,3 @@ def chat(
     except KeyboardInterrupt:
         stop_event.set()
         p.join()
-
-
-if __name__ == "__main__":
-    chat()
-
-#dp = DynaPrompt()
