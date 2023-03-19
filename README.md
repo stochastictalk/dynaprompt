@@ -34,14 +34,16 @@ Install the package with
 pip install git+https://github.com/stochastictalk/dynaprompt
 ```
 
+To run the example chatbot, create a `.env` file in your working directory that looks like this
 ```
-dp = DynaPrompt(file=".dp")
-message = "..."
-dp(message) # Schedules/deschedules/does nothing (depends on message content).
-dp.schedule # Inspect message schedule.
+OPENAI_API_KEY="<your api key>"
 ```
-
-`dps` ("DynaPrompt schedule") schedules a message, `dpd` ("DynaPrompt deschedule") cancels a scheduled message.
+Then launch a Python interpreter and run
+```
+from dynaprompt.examples import openai_chat_completion
+openai_chat_completion()
+```
+This creates a chat session facilitated by OpenAI's in the interpreter. Say hellow to PLEX!
 
 
 ## Developer Quickstart
