@@ -12,11 +12,11 @@ class DynaPrompt:
         self._logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self._logger.info("initialized")
         self._regexps = {
-            "dps_command": re.compile(r"^dps"),
-            "dpd_command": re.compile(r"^dpd"),
+            "dps_command": re.compile(r"^\s*dps"),
+            "dpd_command": re.compile(r"^\s*dpd"),
             "recipient": re.compile(r"\S+\s+(\S+)"),
             "time_prompt": re.compile(r"\b\w+\s+\w+\s+([^\n]+)"),
-            "prompt": re.compile(r"[^\n]+\n(.*)")
+            "prompt": re.compile(r"[^\n]+\n(.*)", flags=re.DOTALL)
         }
         self.schedule = dict()
 
