@@ -32,7 +32,7 @@ dev = [
 ]
 
 [tool.poetry.scripts]
-chat = "dynaprompt.examples:chat"
+dpchat = "dynaprompt.examples:chat"
 
 [build-system]
 requires = ["poetry-core"]
