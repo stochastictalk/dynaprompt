@@ -52,6 +52,8 @@ def format_role_string(role: str):
         return Back.WHITE + f"{role}" + Style.RESET_ALL + "\n"
     elif role == "assistant":
         return Back.MAGENTA + f"{role}" + Style.RESET_ALL + "\n"
+    elif role == "error":
+        return Back.RED + f"{role}" + Style.RESET_ALL + "\n"
     else:
         return role
 
@@ -69,9 +71,9 @@ def render_log(message_log_proxy: ValueProxy, stop_event: Event):
             id_of_most_recent_message_at_last_render = id_of_last_message_in_log
 
 
-def remove_ids(message_log: List[Dict]):
+def map_message_log_to_openai_messages(message_log: List[Dict]):
     # @TODO come up with a less shitty way to manage ids
-    return [{i:d[i] for i in d if i != "id"} for d in message_log]
+    return [{i:d[i] for i in d if i != "id"} for d in message_log if d["role"] != "error"]
 
 
 def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
@@ -83,14 +85,25 @@ def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
         sleep(0.1)
         id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
         if id_of_last_message_in_log != id_of_last_message_chatbot_sent:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=remove_ids(message_log_proxy.value)
-            ) # @TODO Handle API request failure.
-            message = response["choices"][0]["message"]["content"].lstrip()
-            id_of_last_message_chatbot_sent = generate_hash("assistant")
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=map_message_log_to_openai_messages(message_log_proxy.value)
+                ) 
+                message = response["choices"][0]["message"]["content"].lstrip()
+                id_of_last_message_chatbot_sent = generate_hash("assistant")
+                role = "assistant"
+            except openai.error.APIError as e:
+                message = f"OpenAI API returned an API Error: {e}"
+                role = "error"
+            except openai.error.APIConnectionError as e:
+                message = f"Failed to connect to OpenAI API: {e}"
+                role = "error"
+            except openai.error.RateLimitError as e:
+                message = f"OpenAI API request exceeded rate limit: {e}"
+                role = "error"
             message_log_proxy.value = message_log_proxy.value + [
-                {"role": "assistant", "content": message, "id": id_of_last_message_chatbot_sent}
+                    {"role": role, "content": message, "id": id_of_last_message_chatbot_sent}
             ]
 
 
