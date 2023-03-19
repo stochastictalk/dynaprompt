@@ -21,6 +21,7 @@ openai.api_key = config["OPENAI_API_KEY"]
 def generate_hash(optional_string: str = ""):
     return hash(optional_string + str(time_since_epoch_ms()) + str(randint(0, maxsize)))
 
+
 def time_since_epoch_ms():
     return int(time() * 1000)
 
@@ -71,6 +72,7 @@ def render_log(message_log_proxy: ValueProxy, stop_event: Event):
 def remove_ids(message_log: List[Dict]):
     # @TODO come up with a less shitty way to manage ids
     return [{i:d[i] for i in d if i != "id"} for d in message_log]
+
 
 def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
     # Needs to listen for new inputs.

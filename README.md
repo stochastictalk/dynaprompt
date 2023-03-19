@@ -1,5 +1,7 @@
 # 🕰️⚡ `dynaprompt` ⚡🕰️
 
+⚠️ currently a WIP ⚠️
+
 A conversation between a chatbot and user currently looks like
 ```
 User:       <prompt>
