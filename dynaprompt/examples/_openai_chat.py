@@ -1,5 +1,7 @@
+from contextlib import redirect_stdout
 from multiprocessing import Manager, Process
 from multiprocessing.managers import ValueProxy
+from multiprocessing.synchronize import Event
 import os
 from random import randint
 from sys import maxsize
@@ -53,46 +55,41 @@ def format_role_string(role: str):
         return role
 
 
-def render_log(message_log_proxy: ValueProxy):
-    try:
-        id_of_most_recent_message_at_last_render = None
-        while True:
-            sleep(0.05)
-            id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
-            if id_of_last_message_in_log != id_of_most_recent_message_at_last_render:
-                os.system("clear")
-                for entry in message_log_proxy.value:
-                    print(format_role_string(entry["role"]) + entry['content'])
-                id_of_most_recent_message_at_last_render = id_of_last_message_in_log
-    except KeyboardInterrupt:
-        pass
+def render_log(message_log_proxy: ValueProxy, stop_event: Event):
+    id_of_most_recent_message_at_last_render = None
+    while not stop_event.is_set():
+        sleep(0.05)
+        id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
+        if id_of_last_message_in_log != id_of_most_recent_message_at_last_render:
+            os.system("clear")
+            for entry in message_log_proxy.value:
+                print(format_role_string(entry["role"]) + entry['content'])
+            print("\n> ", end="")
+            id_of_most_recent_message_at_last_render = id_of_last_message_in_log
 
 
 def remove_ids(message_log: List[Dict]):
     # @TODO come up with a less shitty way to manage ids
     return [{i:d[i] for i in d if i != "id"} for d in message_log]
 
-def receive_chatbot_input(message_log_proxy: ValueProxy):
+def receive_chatbot_input(message_log_proxy: ValueProxy, stop_event: Event):
     # Needs to listen for new inputs.
     # Has view of current state of message_log_proxy. State changes.
     # Make new request if latest message was not the one just sent.
-    try:
-        id_of_last_message_chatbot_sent = None
-        while True:
-            sleep(0.1)
-            id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
-            if id_of_last_message_in_log != id_of_last_message_chatbot_sent:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=remove_ids(message_log_proxy.value)
-                ) # @TODO Handle API request failure.
-                message = response["choices"][0]["message"]["content"]
-                id_of_last_message_chatbot_sent = generate_hash("assistant")
-                message_log_proxy.value = message_log_proxy.value + [
-                    {"role": "assistant", "content": message, "id": id_of_last_message_chatbot_sent}
-                ]
-    except KeyboardInterrupt:
-        pass
+    id_of_last_message_chatbot_sent = None
+    while not stop_event.is_set():
+        sleep(0.1)
+        id_of_last_message_in_log = message_log_proxy.value[-1]["id"]
+        if id_of_last_message_in_log != id_of_last_message_chatbot_sent:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=remove_ids(message_log_proxy.value)
+            ) # @TODO Handle API request failure.
+            message = response["choices"][0]["message"]["content"].lstrip()
+            id_of_last_message_chatbot_sent = generate_hash("assistant")
+            message_log_proxy.value = message_log_proxy.value + [
+                {"role": "assistant", "content": message, "id": id_of_last_message_chatbot_sent}
+            ]
 
 
 def openai_chat():
@@ -107,17 +104,17 @@ def openai_chat():
                 "id": generate_hash("system")
             }]
         )
-        chatbot_process = Process(target=receive_chatbot_input, args=(message_log_proxy,))
-        render_process = Process(target=render_log, args=(message_log_proxy,))
+        stop_event = manager.Event()
+        chatbot_process = Process(target=receive_chatbot_input, args=(message_log_proxy, stop_event))
+        render_process = Process(target=render_log, args=(message_log_proxy, stop_event))
         processes = [chatbot_process, render_process]
 
         for p in processes: 
             p.start()
 
         receive_user_input(message_log_proxy) # Blocking, must be run in main process.
-
     except KeyboardInterrupt:
-        for p in processes:
-            p.join()
+        stop_event.set()
+        p.join()
 
 #dp = DynaPrompt()
