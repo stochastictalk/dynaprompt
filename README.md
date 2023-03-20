@@ -13,8 +13,14 @@ Notice:
 1. The interaction is initiated by the user.
 2. Both participants send only a single message at a time.
 3. The chatbot only ever responds immediately after being addressed by the user. 
+4. It only contains two participants.
 
-`dynaprompt` is a Python package that breaks aspects 1 and 3 of this paradigm by providing a message scheduler. This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
+`dynaprompt` is a Python package that breaks aspects 1, 3, and 4 of this paradigm by providing 
+* a `Conversation` class that allows multiple input sources and output devices to hook into a common message log
+* a `PromptScheduler` input source that conversation participants can use to schedule messages to themselves and others
+
+
+This message scheduler's functionality is very simple: the user and chatbot can use it to schedule messages (lol). A message is scheduled by sending an instruction message in the chat that has the format
 ```
 dps <RECIPIENT> <TIME PROMPT>
 
