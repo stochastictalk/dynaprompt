@@ -21,12 +21,14 @@ def map_message_log_to_openai_messages(message_log: List[Dict]):
 class OpenAIChat:
     def __init__(
         self,
+        role: str = "assistant",
         system_prompt: str = "You are a helpful AI assistant called PLEX.\
  You always speak like a pirate. You also love cracking wise.",
         temperature: float = 0.3,
         presence_penalty: float = 0.0,
         frequency_penalty: float = 0.0,
     ):
+        self.role = role
         self.system_prompt = system_prompt
         self.temperature = temperature
         self.presence_penalty = presence_penalty
@@ -59,7 +61,7 @@ class OpenAIChat:
                             message += response["choices"][0]["message"]["content"].lstrip()
                             stop = "stop" == response["choices"][0]["finish_reason"]
                         id_of_last_message_chatbot_sent = random_hash("assistant")
-                        role = "assistant"
+                        role = self.role
                     except openai.error.APIError as exception:
                         message = f"OpenAI API returned an API Error: {exception}"
                         role = "error"
