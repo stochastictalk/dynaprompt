@@ -48,7 +48,10 @@ from dynaprompt.outputs import CLIOutput
 
 
 if __name__ == "__main__":
-    conversation = Conversation(iocallables=[CLIOutput(), OpenAIChat()], main_iocallable=CLIInput())
+    conversation = Conversation(
+        iocallables=[CLIOutput(), OpenAIChat()],
+        main_iocallable=CLIInput()
+    )
     conversation()
 ```
 This creates a chat session involving your CLI input and OpenAI's chat completion API, with the message history being rendered to the CLI.
