@@ -40,12 +40,18 @@ To run the example chatbot, create a `.env` file in your working directory that 
 ```
 OPENAI_API_KEY="<your api key>"
 ```
-Then launch a Python interpreter and run
+Then run `python example.py`, which executes the following:
 ```
-from dynaprompt.examples import chat
-chat()
+from dynaprompt import Conversation
+from dynaprompt.inputs import CLIInput, OpenAIChat
+from dynaprompt.outputs import CLIOutput
+
+
+if __name__ == "__main__":
+    conversation = Conversation(iocallables=[CLIOutput(), OpenAIChat()], main_iocallable=CLIInput())
+    conversation()
 ```
-This creates a chat session facilitated by OpenAI's in the interpreter. Say hello to PLEX!
+This creates a chat session involving your CLI input and OpenAI's chat completion API, with the message history being rendered to the CLI.
 
 
 https://user-images.githubusercontent.com/56552295/226182010-07d10869-716c-434a-b127-d77dc8548a46.mov
