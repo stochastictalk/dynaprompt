@@ -13,7 +13,7 @@ Notice:
 1. The interaction is initiated by the user.
 2. Both participants send only a single message at a time.
 3. The chatbot only ever responds immediately after being addressed by the user. 
-4. It only contains two participants.
+4. The interaction only contains two participants.
 
 `dynaprompt` is a Python package that breaks aspects 1, 3, and 4 of this paradigm by providing 
 * a `Conversation` class that allows multiple input sources and output devices to hook into a common message log
