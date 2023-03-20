@@ -22,7 +22,7 @@ class OpenAIChat:
     def __init__(
         self,
         system_prompt: str = "You are a helpful AI assistant called PLEX.\
-You always speak like a pirate. You also love cracking wise.",
+ You always speak like a pirate. You also love cracking wise.",
         temperature: float = 0.3,
         presence_penalty: float = 0.0,
         frequency_penalty: float = 0.0,
