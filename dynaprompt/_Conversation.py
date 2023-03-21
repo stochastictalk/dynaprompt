@@ -4,6 +4,8 @@ from multiprocessing.synchronize import Event
 from time import sleep
 from typing import Callable, List, Union
 
+from dynaprompt.utils import random_hash
+
 
 class Conversation:
     def __init__(
@@ -18,7 +20,10 @@ class Conversation:
 
     def __call__(self):
         manager = Manager()  # Used to share state between processes.
-        message_log_proxy = manager.Value("message_log_proxy", [])
+        message_log_proxy = manager.Value(
+            "message_log_proxy",
+            [{"role": "conversation_manager", "content": "Conversation initialized.", "id": random_hash()}],
+        )
         stop_event = manager.Event()
         processes = [Process(target=f, args=(message_log_proxy, stop_event)) for f in self.iocallables]
 
