@@ -37,6 +37,8 @@ Example use-cases:
 
 ## User Quickstart
 
+To use CoquiTTS: `brew install mecab`.
+
 Install the package with
 ```
 pip install git+https://github.com/stochastictalk/dynaprompt
