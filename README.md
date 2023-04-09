@@ -2,6 +2,13 @@
 
 ⚠️ currently a WIP ⚠️
 
+Conventions:
+- Conversation log is a file on disk.
+- Each agent is run as a separate Python process.
+
+---
+
+
 A conversation between a chatbot and user currently looks like
 ```
 User:       <prompt>
