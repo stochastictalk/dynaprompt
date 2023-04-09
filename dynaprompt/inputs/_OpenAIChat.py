@@ -14,8 +14,7 @@ openai.api_key = config["OPENAI_API_KEY"]
 
 
 def map_message_log_to_openai_messages(message_log: List[Dict]):
-    # @TODO come up with a less shitty way to manage ids
-    return [{i: d[i] for i in d if i != "id"} for d in message_log if d["role"] != "error"]
+    return [{i: d[i] for i in d if i != "id"} for d in message_log if d["role"] not in ["error", "conversation_manager"]]
 
 
 class OpenAIChat:
@@ -36,7 +35,7 @@ class OpenAIChat:
 
     def __call__(self, message_log_proxy: ValueProxy, stop_event: Event):
 
-        if len(message_log_proxy.value) == 0:
+        if len(map_message_log_to_openai_messages(message_log_proxy.value)) == 0:
             message_log_proxy.value = message_log_proxy.value + [
                 {"role": "system", "content": self.system_prompt, "id": random_hash()}
             ]
